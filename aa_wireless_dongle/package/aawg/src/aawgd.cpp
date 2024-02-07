@@ -12,19 +12,19 @@ int main(void) {
 
     // Global init
     std::optional<std::thread> ueventThread =  UeventMonitor::instance().start();
-    UsbManager::instance().init();
     BluetoothHandler::instance().init();
+    UsbManager::instance().init();
 
     while (true) {
         // Per connection setup and processing
+        BluetoothHandler::instance().connect();
+        
         AAWProxy proxy;
         std::optional<std::thread> proxyThread = proxy.startServer(Config::instance()->getWifiInfo().port);
 
         if (!proxyThread) {
             return 1;
         }
-
-        BluetoothHandler::instance().connect();
 
         proxyThread->join();
         BluetoothHandler::instance().powerOff();
