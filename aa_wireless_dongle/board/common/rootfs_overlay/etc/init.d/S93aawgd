@@ -11,6 +11,11 @@ RETVAL=0
 
 case "$1" in
 	start)
+		if [ -z "$AAWG_CONF_SOURCED" ]; then
+			echo "Source /etc/aawgd.conf.sh"
+			source /etc/aawgd.conf.sh
+		fi
+
 		printf "Starting $DAEMON: "
 		start-stop-daemon -S -b -q -m -p "$PIDFILE" -x "/usr/bin/$DAEMON"
 		RETVAL=$?
